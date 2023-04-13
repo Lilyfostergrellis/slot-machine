@@ -8,6 +8,28 @@
 
 const prompt = require("prompt-sync")();
 
+const ROWS = 3;
+const COLS = 3;
+// global variable for rows & collumns
+
+const SYMBOLS_COUNT = {
+    "A": 2,
+    "B": 4,
+    "C": 6,
+    "D": 8
+}
+//how many of each symbol is on the reel
+
+const SYMBOL_VALUES = {
+    "A": 5,
+    "B": 4,
+    "C": 3,
+    "D": 2
+}
+//the value/multiplier of each "symbol"; A is worth 5 i.e
+
+
+
 const deposit = () => {
 
     while (true) {
