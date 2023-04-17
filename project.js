@@ -16,16 +16,16 @@ const SYMBOLS_COUNT = {
     A: 2,
     B: 4,
     C: 6,
-    D: 8
-}
+    D: 8,
+};
 //how many of each symbol is on the reel
 
 const SYMBOL_VALUES = {
-    "A": 5,
-    "B": 4,
-    "C": 3,
-    "D": 2
-}
+    A: 5,
+    B: 4,
+    C: 3,
+    D: 2,
+};
 //the value/multiplier of each "symbol"; i.e A is worth 5 
 
 const deposit = () => {
@@ -54,7 +54,7 @@ const getNumberOfLines = () => {
         const numberOfLines = parseFloat(lines);
         //parseFloat to check if the user input is a number or NaN.
 
-        if (isNaN(numberOfLines) || numberOfLines <= 0 || numberOfLines >3){
+        if (isNaN(numberOfLines) || numberOfLines <= 0 || numberOfLines > 3){
             console.log("Invalid amount, please try again.");
         }
         //if the deposit amount is not a number or the amount is less than or equal to 0 then the console log displays.
@@ -86,14 +86,14 @@ const getBet = (balance, lines) => {
 const spin = () => {
     const symbols = [];
     for (const [symbol, count] of Object.entries(SYMBOLS_COUNT)) {
-        for (let i=0; i < count; i++) {
+        for (let i = 0; i < count; i++) {
             symbols.push(symbol);
         }
     }
 
     const reels = [];
     for (let i = 0; i < COLS; i++) {
-            reels.push([]);
+        reels.push([]);
         const reelSymbols = [...symbols];
         for (let j = 0; j < ROWS; j++) {
             const randomIndex = Math.floor(Math.random() * reelSymbols.length)
@@ -131,12 +131,13 @@ const printRows = (rows) => {
                 //print | inbetween symbols, not at the end of last symbol
             }
         }
-        console.log(rowString)
+        console.log(rowString);
     }
 };
 
 const getWinnings = (rows, bet, lines) => {
     let winnings = 0;
+
     for (let row = 0; row < lines; row++) {
         const symbols = rows[row];
         let allSame = true;
@@ -152,18 +153,39 @@ const getWinnings = (rows, bet, lines) => {
         }
 
         if (allSame) {
-            winnings += bet * SYMBOL_VALUES[symbols[0]]
+            winnings += bet * SYMBOL_VALUES[symbols[0]];
         }
     }
 
     return winnings;
 };
 
-let balance = deposit();
-const numberOfLines = getNumberOfLines();
-const bet = getBet(balance, numberOfLines);
-const reels = spin();
-const rows = transpose(reels);
-printRows(rows);
-const winnings = getWinnings(rows, bet, numberOfLines);
-console.log ("You won, £" + winnings.toString());
+
+const game = () => {
+    let balance = deposit();
+
+    while (true) {
+        console.log("Your current balance is £" + balance);
+        const numberOfLines = getNumberOfLines();
+        const bet = getBet(balance, numberOfLines);
+        balance -= bet * numberOfLines;
+        const reels = spin();
+        const rows = transpose(reels);
+        printRows(rows);
+        const winnings = getWinnings(rows, bet, numberOfLines);
+        balance += winnings;
+        console.log ("You won, £" + winnings.toString());
+
+        if (balance <= 0) {
+            console.log("You've run out of money!");
+            break;
+        }
+
+        const replay = prompt("Do you wish to play again? (y/n)");
+
+        if (replay != "y") break;
+        //if user choice is not equal to "y" then break
+    };
+};
+
+game();
