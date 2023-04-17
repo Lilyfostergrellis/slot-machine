@@ -108,9 +108,62 @@ const spin = () => {
     return reels;
 };
 
-const reels = spin();
-console.log(reels);
+const transpose = (reels) => {
+    const rows = [];
+
+    for (let i = 0; i < ROWS; i++) {
+        rows.push([]);
+        for (let j = 0; j < COLS; j++) {
+            rows[i].push(reels[j][i]);
+        }  
+    }
+    return rows;
+};
+// transpose reels
+
+const printRows = (rows) => {
+    for (const row of rows) {
+        let rowString = "";
+        for (const [i, symbol] of row.entries()){
+            rowString += symbol;
+            if (i != row.length - 1){
+                rowString += " | "
+                //print | inbetween symbols, not at the end of last symbol
+            }
+        }
+        console.log(rowString)
+    }
+};
+
+const getWinnings = (rows, bet, lines) => {
+    let winnings = 0;
+    for (let row = 0; row < lines; row++) {
+        const symbols = rows[row];
+        let allSame = true;
+
+        //if not the same, allSame will instead be false
+        for (const symbol of symbols) {
+            if (symbol != symbol[0]) {
+                //using the first symbol as the reference point
+                allSame = false;
+                break;
+                //breaks loop if the symbols are not the same
+            }
+        }
+
+        if (allSame) {
+            winnings += bet * SYMBOL_VALUES[symbols[0]]
+        }
+    }
+
+    return winnings;
+};
 
 let balance = deposit();
 const numberOfLines = getNumberOfLines();
 const bet = getBet(balance, numberOfLines);
+const reels = spin();
+const rows = transpose(reels);
+printRows(rows);
+const winnings = getWinnings(rows, bet, numberOfLines);
+console.log ("You won, £" + winnings.toString());
