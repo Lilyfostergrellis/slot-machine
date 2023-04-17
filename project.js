@@ -13,10 +13,10 @@ const COLS = 3;
 // global variable for rows & collumns
 
 const SYMBOLS_COUNT = {
-    "A": 2,
-    "B": 4,
-    "C": 6,
-    "D": 8
+    A: 2,
+    B: 4,
+    C: 6,
+    D: 8
 }
 //how many of each symbol is on the reel
 
@@ -26,9 +26,7 @@ const SYMBOL_VALUES = {
     "C": 3,
     "D": 2
 }
-//the value/multiplier of each "symbol"; A is worth 5 i.e
-
-
+//the value/multiplier of each "symbol"; i.e A is worth 5 
 
 const deposit = () => {
 
@@ -84,6 +82,34 @@ const getBet = (balance, lines) => {
         //loops infinitely until user enters valid amount
     }
 };
+
+const spin = () => {
+    const symbols = [];
+    for (const [symbol, count] of Object.entries(SYMBOLS_COUNT)) {
+        for (let i=0; i < count; i++) {
+            symbols.push(symbol);
+        }
+    }
+
+    const reels = [];
+    for (let i = 0; i < COLS; i++) {
+            reels.push([]);
+        const reelSymbols = [...symbols];
+        for (let j = 0; j < ROWS; j++) {
+            const randomIndex = Math.floor(Math.random() * reelSymbols.length)
+            //randomIndex equal to whole integer, random number by the array length
+            const selectedSymbol = reelSymbols[randomIndex];
+            reels[i].push(selectedSymbol);
+            //push into current reel
+            reelSymbols.splice(randomIndex, 1);
+            //removes symbol, so we dont select again
+        }
+    }
+    return reels;
+};
+
+const reels = spin();
+console.log(reels);
 
 let balance = deposit();
 const numberOfLines = getNumberOfLines();
